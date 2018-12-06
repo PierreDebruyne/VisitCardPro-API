@@ -1,0 +1,14 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="VisitCardPro:war">
+    <output-path>$PROJECT_DIR$/target</output-path>
+    <properties id="maven-jee-properties">
+      <options>
+        <module>VisitCardPro</module>
+        <packaging>war</packaging>
+      </options>
+    </properties>
+    <root id="archive" name="VisitCardPro-0.0.1-SNAPSHOT.war">
+      <element id="artifact" artifact-name="VisitCardPro:war exploded" />
+    </root>
+  </artifact>
+</component>
