@@ -17,7 +17,9 @@ public class ContextListener implements ServletContextListener{
         //Run this before web application is started
 	@Override
 	public void contextInitialized(ServletContextEvent arg0) {
-		User user = new User();
+		System.out.println("CONTEXT LISTENER --------------------------------------------");
+
+		/*User user = new User();
 		user.setAuth(new Authentication());
 		user.getAuth().setEmail("pierre0debruyne@gmail.com");
 		user.getAuth().setHashedPassword("lallala");
@@ -26,7 +28,7 @@ public class ContextListener implements ServletContextListener{
 		DAOFactory.getInstance().getUserDao().create(user);
 		System.out.println("ServletContextListener started");
 
-		System.out.println(user.getAuth().getId());
+		System.out.println(user.getAuth().getId());*/
 
 	}
 }

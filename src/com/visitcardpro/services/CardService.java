@@ -18,8 +18,11 @@ public class CardService {
 
     @GET
     public Response exploreCards() {
-        User user = (User) requestContext.getProperty("user");
-        return Response.ok().entity(user).build();
+        String user = (String) requestContext.getProperty("user");
+        if (user == null)
+            return Response.ok().entity("lol").build();
+        else
+            return Response.ok().entity(user).build();
     }
 
     @POST

@@ -9,13 +9,35 @@
     <welcome-file>default.htm</welcome-file>
     <welcome-file>default.jsp</welcome-file>
   </welcome-file-list>
-  
+    <servlet>
+        <servlet-name>VisitCardPro API</servlet-name>
+        <servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
+        <init-param>
+            <param-name>jersey.config.server.provider.packages</param-name>
+            <param-value>
+                io.swagger.jaxrs.listing,
+                com.visitcardpro</param-value>
+        </init-param>
+        <init-param>
+            <param-name>debug</param-name>
+            <param-value>0</param-value>
+        </init-param>
+        <init-param>
+            <param-name>jersey.config.server.provider.classnames</param-name>
+            <param-value>org.glassfish.jersey.media.multipart.MultiPartFeature</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+
+    </servlet>
   
   <listener>
 	<listener-class>
              com.visitcardpro.listeners.ContextListener
         </listener-class>
    </listener>
-   
-   
+
+    <servlet-mapping>
+        <servlet-name>VisitCardPro API</servlet-name>
+        <url-pattern>/*</url-pattern>
+    </servlet-mapping>
 </web-app>
