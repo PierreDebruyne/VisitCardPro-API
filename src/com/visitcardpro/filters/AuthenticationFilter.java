@@ -16,14 +16,13 @@ public class AuthenticationFilter implements ContainerRequestFilter {
     private ResourceInfo resourceInfo;
 
     @Context
-    HttpServletRequest servletRequest;
+    private HttpServletRequest servletRequest;
 
     @Override
     public void filter(ContainerRequestContext requestContext) {
         //Method method = resourceInfo.getResourceMethod();
         //String token = requestContext.getHeaderString("accessToken");
         // get user from accessToken
-
 
         requestContext.setProperty("user", servletRequest.getSession().getId());
 

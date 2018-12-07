@@ -1,7 +1,6 @@
 package com.visitcardpro.services;
 
-import com.visitcardpro.beans.User;
-
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.core.Context;
@@ -14,7 +13,9 @@ import javax.ws.rs.core.Response;
 public class CardService {
 
     @Context
-    ContainerRequestContext requestContext;
+    private ContainerRequestContext requestContext;
+    @Context
+    private HttpServletRequest servletRequest;
 
     @GET
     public Response exploreCards() {

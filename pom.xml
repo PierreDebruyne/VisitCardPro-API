@@ -88,7 +88,22 @@
     	<artifactId>bonecp</artifactId>
     	<version>0.8.0.RELEASE</version>
 	</dependency>
-	
-  	
+
+      <dependency>
+          <groupId>io.jsonwebtoken</groupId>
+          <artifactId>jjwt</artifactId>
+          <version>0.8.0</version>
+          <exclusions>
+              <exclusion>
+                  <artifactId>jackson-databind</artifactId>
+                  <groupId>com.fasterxml.jackson.core</groupId>
+              </exclusion>
+          </exclusions>
+      </dependency>
+      <dependency>
+          <groupId>org.mindrot</groupId>
+          <artifactId>jbcrypt</artifactId>
+          <version>0.3m</version>
+      </dependency>
   </dependencies>
 </project>
