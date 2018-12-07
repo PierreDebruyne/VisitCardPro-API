@@ -26,7 +26,27 @@
   </build>
   
   <dependencies>
-  	
+      <dependency>
+          <groupId>org.glassfish.jersey.media</groupId>
+          <artifactId>jersey-media-multipart</artifactId>
+          <version>2.24.1</version> <!-- Make sure the Jersey version matches
+                                 the one you are currently using -->
+      </dependency>
+      <dependency>
+          <groupId>org.glassfish.jersey.media</groupId>
+          <artifactId>jersey-media-json-jackson</artifactId>
+          <version>2.24.1</version>
+      </dependency>
+      <dependency>
+          <groupId>org.glassfish.jersey.containers</groupId>
+          <artifactId>jersey-container-jetty-servlet</artifactId>
+          <version>2.22.1</version>
+      </dependency>
+      <dependency>
+          <groupId>org.glassfish.jersey.containers</groupId>
+          <artifactId>jersey-container-servlet-core</artifactId>
+          <version>2.24.1</version>
+      </dependency>
   	<!-- https://mvnrepository.com/artifact/javax.servlet/servlet-api -->
 	<dependency>
     	<groupId>javax.servlet</groupId>
