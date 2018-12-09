@@ -1,9 +1,5 @@
 package com.visitcardpro.listeners;
 
-import com.visitcardpro.beans.Authentication;
-import com.visitcardpro.beans.User;
-import com.visitcardpro.dao.DAOFactory;
-
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 

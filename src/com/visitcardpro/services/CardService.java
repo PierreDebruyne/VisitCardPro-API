@@ -32,19 +32,20 @@ public class CardService {
     }
 
     @PUT
-    public Response updateCard() {
+    @Path("/{id}")
+    public Response updateCard(@PathParam("id") final String id) {
         return Response.ok().build();
     }
 
     @DELETE
-    public Response deleteCard() {
+    @Path("/{id}")
+    public Response deleteCard(@PathParam("id") final String id) {
         return Response.ok().build();
     }
 
     @GET
     @Path("/{id}")
-    public Response getCardById(@PathParam("id") final String id) {
+    public Response getCard(@PathParam("id") final String id) {
         return Response.ok().entity(null).build();
     }
-
 }
