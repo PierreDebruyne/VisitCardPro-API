@@ -6,7 +6,7 @@ public class Authentication {
 	
 	protected String email;
 	protected String hashedPassword;
-	protected String accessToken;
+	protected String refreshToken;
 	protected String role;
 	
 	public Authentication() { }
@@ -29,12 +29,15 @@ public class Authentication {
 	public void setHashedPassword(String hashedPassword) {
 		this.hashedPassword = hashedPassword;
 	}
-	public String getAccessToken() {
-		return accessToken;
+
+	public String getRefreshToken() {
+		return refreshToken;
 	}
-	public void setAccessToken(String accessToken) {
-		this.accessToken = accessToken;
+
+	public void setRefreshToken(String refreshToken) {
+		this.refreshToken = refreshToken;
 	}
+
 	public String getRole() {
 		return role;
 	}

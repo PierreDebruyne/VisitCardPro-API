@@ -1,5 +1,6 @@
 package com.visitcardpro.authentication;
 
+import com.visitcardpro.utils.RandomString;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -18,7 +19,7 @@ public class TokenHelper {
 	public TokenHelper(String token) {
 		value = token;
 		body = Jwts.parser()
-				.setSigningKey(PRIVATE_KEY)
+//				.setSigningKey(PRIVATE_KEY)
 				.parseClaimsJws(value)
 				.getBody();
 	}
@@ -29,6 +30,11 @@ public class TokenHelper {
 				.setExpiration(new Date(System.currentTimeMillis() + TOKEN_EXPIRATION_TIME))
 				.signWith(SignatureAlgorithm.HS512, PRIVATE_KEY).compact();
 	}
+
+	public static String generateRefreshToken() {
+		return new RandomString(12).nextString();
+	}
+
 	public String getSubject() {
 		return body.getSubject();
 	}
