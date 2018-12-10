@@ -2,6 +2,7 @@ package com.visitcardpro.authentication;
 
 import com.visitcardpro.utils.RandomString;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
@@ -24,7 +25,7 @@ public class TokenHelper {
 				.getBody();
 	}
 	
-	public static String generateToken(String subject) {
+	public static String generateAccessToken(String subject) {
 		return Jwts.builder().setIssuedAt(new Date()).setIssuer(ISSUER)
 				.setSubject(subject)
 				.setExpiration(new Date(System.currentTimeMillis() + TOKEN_EXPIRATION_TIME))
@@ -47,11 +48,10 @@ public class TokenHelper {
 		return body.getIssuedAt();
 	}
 
-	public String getValue() {
+	public String updateAccessTokenIssue() {
+		JwtBuilder builder = Jwts.builder().setClaims(body);
+		builder.setExpiration(new Date(System.currentTimeMillis() + TOKEN_EXPIRATION_TIME));
+		value = builder.compact();
 		return value;
-	}
-
-	public void setValue(String value) {
-		this.value = value;
 	}
 }

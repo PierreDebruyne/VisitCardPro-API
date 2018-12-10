@@ -45,7 +45,7 @@ public class UserDAO extends DAO<User> {
 	    user.setAuth(new Authentication());
 	    user.getAuth().setEmail( resultSet.getString( "email" ) );
 	    user.getAuth().setHashedPassword( resultSet.getString( "hashedPassword" ) );
-	    user.getAuth().setAccessToken(resultSet.getString("accessToken"));
+	    user.getAuth().setRefreshToken(resultSet.getString("accessToken"));
 	    user.getAuth().setRole(resultSet.getString("role"));
 	    return user;
 	}

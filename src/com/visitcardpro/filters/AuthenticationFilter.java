@@ -33,11 +33,8 @@ public class AuthenticationFilter implements ContainerRequestFilter {
                 requestContext.abortWith(Response.status(Response.Status.UNAUTHORIZED).entity("Authentication required : access_token not found or empty").build());
             if (new Date().before(helper.getExpiration()))
                 requestContext.abortWith(Response.status(Response.Status.UNAUTHORIZED).entity("Authentication required : access_token expired").build());
-
-
-            requestContext.setProperty("user", servletRequest.getSession().getAttribute("user_id"));
+            if (!servletRequest.getSession().getAttribute("accessToken").equals(token))
+                requestContext.abortWith(Response.status(Response.Status.UNAUTHORIZED).entity("Authentication required : access_token doesn't match").build());
         }
-        // get user from accessToken
-
     }
 }
