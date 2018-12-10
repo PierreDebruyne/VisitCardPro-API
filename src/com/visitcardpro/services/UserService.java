@@ -122,17 +122,15 @@ public class UserService {
         String oldPassword = JobHelper.getCredentialParam(credential, 1);
         String newPassword = JobHelper.getCredentialParam(credential, 2);
 
-        String salt = BCrypt.gensalt(12);
-        String hashed = BCrypt.hashpw(oldPassword, salt);
-
         User user = (User) servletRequest.getSession().getAttribute("user");
-        if (!user.getAuth().getHashedPassword().equals(hashed))
-            return Response.status(Response.Status.BAD_REQUEST).entity("Incorrect old password").build();
 
-        salt = BCrypt.gensalt(12);
-        hashed = BCrypt.hashpw(newPassword, salt);
+        if (BCrypt.checkpw(oldPassword, user.getAuth().getHashedPassword())) {
+            return Response.status(Response.Status.BAD_REQUEST).entity("invalid password").build();
+        }
+        String salt = BCrypt.gensalt(12);
+        String newHashedPassowrd = BCrypt.hashpw(newPassword, salt);
 
-        user.getAuth().setHashedPassword(hashed);
+        user.getAuth().setHashedPassword(newHashedPassowrd);
         DAOFactory.getInstance().getAuthenticationDao().update(user.getAuth());
 
         return Response.ok().build();
