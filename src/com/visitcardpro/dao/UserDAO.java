@@ -23,7 +23,7 @@ public class UserDAO extends DAO<User> {
 		return this.find(SQL_SELECT_BY_ID, id);
 	}
 
-	public User findById(String email) throws DAOException {
+	public User findByEmail(String email) throws DAOException {
 		return this.find(SQL_SELECT_BY_EMAIL, email);
 	}
 
@@ -46,6 +46,10 @@ public class UserDAO extends DAO<User> {
 	public void delete(User user) throws DAOException {
 		this.delete(SQL_DELETE, user.getId());
 		daoFactory.getAuthenticationDao().delete(user.getAuth());
+	}
+
+	public void update(User user) throws DAOException {
+		daoFactory.getAuthenticationDao().update(user.getAuth());
 	}
 
 	

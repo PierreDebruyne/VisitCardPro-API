@@ -41,6 +41,22 @@ public abstract class DAO<T> {
         }
     }
 
+    protected void edit(String sql, Object... objects) throws DAOException {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+
+        try {
+            connection = daoFactory.getConnection();
+            preparedStatement = initialisationRequetePreparee( connection, sql, false, objects );
+            resultSet = preparedStatement.executeQuery();
+        } catch ( SQLException e ) {
+            throw new DAOException( e );
+        } finally {
+            fermeturesSilencieuses( resultSet, preparedStatement, connection );
+        }
+    }
+
     protected List<T> getList(String sql, Object... objets) throws DAOException {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
