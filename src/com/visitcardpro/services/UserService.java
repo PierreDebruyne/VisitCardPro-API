@@ -60,13 +60,14 @@ public class UserService {
     }
 
     @GET
-    @Path("/token")
+    @Path("/refresh")
     public Response getNewAccessToken(@HeaderParam("refresh_token") final String refreshToken) {
 
         User user = DAOFactory.getInstance().getUserDao().findByRefreshToken(refreshToken);
         if (user == null)
             return Response.status(Response.Status.BAD_REQUEST).entity("invalid refresh token").build();
         String accessToken =  TokenHelper.generateAccessToken(user.getAuth().getEmail());
+        servletRequest.getSession().setAttribute("user", user);
         servletRequest.getSession().setAttribute("accessToken", accessToken);
         return Response.ok().header("access_token", accessToken).build();
     }
@@ -79,6 +80,7 @@ public class UserService {
         User user = (User) servletRequest.getSession().getAttribute("user");
         user.getAuth().setRefreshToken(null);
         DAOFactory.getInstance().getUserDao().update(user);
+        servletRequest.getSession().invalidate();
         return Response.ok().build();
     }
 
@@ -93,7 +95,7 @@ public class UserService {
         String hashed = BCrypt.hashpw(password, salt);
 
         Authentication auth = new Authentication();
-        auth.setRefreshToken(TokenHelper.generateRefreshToken());
+        auth.setRefreshToken(null);
         auth.setEmail(email);
         auth.setHashedPassword(hashed);
         auth.setRole("BASIC");

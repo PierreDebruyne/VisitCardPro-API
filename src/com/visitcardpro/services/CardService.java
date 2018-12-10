@@ -39,30 +39,34 @@ public class CardService {
         form.setKey(new RandomString(8).nextString());
         User user = (User) servletRequest.getSession().getAttribute("user");
         DAOFactory.getInstance().getCardDao().createCardByUser(form, user);
-        return Response.status(Response.Status.CREATED).header("key", form.getKey()).build();
+        return Response.status(Response.Status.CREATED).entity(form).build();
     }
 
     @PUT
     @Path("/{key}")
+    @Authenticated
     public Response updateCard(@PathParam("key") final String key, final Card form) {
         User user = (User) servletRequest.getSession().getAttribute("user");
+        form.setKey(key);
         DAOFactory.getInstance().getCardDao().updateCardByUser(form, user);
         return Response.ok().build();
     }
 
     @DELETE
-    @Path("/{id}")
-    public Response deleteCard(@PathParam("id") final String id) {
+    @Path("/{key}")
+    @Authenticated
+    public Response deleteCard(@PathParam("key") final String key) {
+        User user = (User) servletRequest.getSession().getAttribute("user");
+        DAOFactory.getInstance().getCardDao().deleteCardByKeyAndUser(key, user);
         return Response.ok().build();
     }
 
     @GET
     @Path("/{key}")
+    @Authenticated
     public Response getCard(@PathParam("key") final String key) {
         User user = (User) servletRequest.getSession().getAttribute("user");
         Card card = DAOFactory.getInstance().getCardDao().getCardByKeyAndUser(key, user);
-        if (card == null)
-            return Response.status(Response.Status.BAD_REQUEST).entity("Card doesn't exist.").build();
-        return Response.ok().entity(null).build();
+        return Response.ok().entity(card).build();
     }
 }
