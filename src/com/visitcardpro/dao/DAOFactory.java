@@ -71,6 +71,7 @@ public class DAOFactory {
             BoneCPConfig config = new BoneCPConfig();
             /* Mise en place de l'URL, du nom et du mot de passe */
             config.setJdbcUrl( url );
+            System.out.println("DATABASE URL : " + url);
             config.setUsername( nomUtilisateur );
             config.setPassword( motDePasse );
             /* Paramétrage de la taille du pool */

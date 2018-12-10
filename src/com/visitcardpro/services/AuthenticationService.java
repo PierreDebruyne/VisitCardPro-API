@@ -82,7 +82,7 @@ public class AuthenticationService {
 
     @POST
     @Path("/signup")
-    public Response signup(final User form, @HeaderParam("Authorization") final String credential) {
+    public Response signup(@HeaderParam("Authorization") final String credential) {
         // validate form
         final String encodedUserPassword = credential.replaceFirst("Basic"+ " ", "");
         String email = JobHelper.getCredentialParam(encodedUserPassword, 1);
@@ -97,10 +97,10 @@ public class AuthenticationService {
         auth.setHashedPassword(hashed);
         auth.setRole("BASIC");
 
-        form.setAuth(auth);
+        User user = new User();
+        user.setAuth(auth);
 
-        DAOFactory.getInstance().getAuthenticationDao().create(auth);
-        DAOFactory.getInstance().getUserDao().create(form);
+        DAOFactory.getInstance().getUserDao().create(user);
         return Response.status(Response.Status.CREATED).build();
     }
 
