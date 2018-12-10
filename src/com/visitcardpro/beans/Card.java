@@ -1,10 +1,28 @@
 package com.visitcardpro.beans;
 
 public class Card {
+    protected long id;
+    protected String key;
     protected String email;
     protected String phone;
     protected String firstName;
     protected String lastName;
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
+    }
 
     public String getEmail() {
         return email;

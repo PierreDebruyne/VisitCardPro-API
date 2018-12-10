@@ -8,8 +8,10 @@ import com.visitcardpro.beans.Authentication;
 import com.visitcardpro.beans.User;
 
 public class UserDAO extends DAO<User> {
-	private static final String SQL_SELECT_BY_ID = "SELECT User.id, Authentication.email, Authentication.hashedPassword, Authentication.accessToken, Authentication.role FROM User INNER JOIN Authentication ON User.authId = Authentication.id WHERE id = ?";
-	private static final String SQL_SELECT_BY_ROLE = "SELECT User.id, Authentication.email, Authentication.hashedPassword, Authentication.accessToken, Authentication.role FROM User INNER JOIN Authentication ON User.authId = Authentication.id WHERE Authentication.role = ?";
+	private static final String SQL_SELECT_BY_ID = "SELECT User.id, Authentication.email, Authentication.hashedPassword, Authentication.refreshToken, Authentication.role FROM User INNER JOIN Authentication ON User.authId = Authentication.id WHERE id = ?";
+	private static final String SQL_SELECT_BY_EMAIL = "SELECT User.id, Authentication.email, Authentication.hashedPassword, Authentication.refreshToken, Authentication.role FROM User INNER JOIN Authentication ON User.authId = Authentication.id WHERE Authentication.email = ?";
+	private static final String SQL_SELECT_BY_REFRESH_TOKEN = "SELECT User.id, Authentication.email, Authentication.hashedPassword, Authentication.refreshToken, Authentication.role FROM User INNER JOIN Authentication ON User.authId = Authentication.id WHERE Authentication.refreshToken = ?";
+	private static final String SQL_SELECT_BY_ROLE = "SELECT User.id, Authentication.email, Authentication.hashedPassword, Authentication.refreshToken, Authentication.role FROM User INNER JOIN Authentication ON User.authId = Authentication.id WHERE Authentication.role = ?";
 	private static final String SQL_CREATE       = 	"INSERT INTO User VALUES(NULL, ?)";
 	private static final String SQL_DELETE       = "DELETE FROM User WHERE id = ?";
 
@@ -19,6 +21,14 @@ public class UserDAO extends DAO<User> {
 
 	public User findById( long id ) throws DAOException {
 		return this.find(SQL_SELECT_BY_ID, id);
+	}
+
+	public User findById(String email) throws DAOException {
+		return this.find(SQL_SELECT_BY_EMAIL, email);
+	}
+
+	public User findByRefreshToken(String token) throws DAOException {
+		return this.find(SQL_SELECT_BY_REFRESH_TOKEN, token);
 	}
 
 	public void create(User user) throws DAOException {
@@ -45,7 +55,7 @@ public class UserDAO extends DAO<User> {
 	    user.setAuth(new Authentication());
 	    user.getAuth().setEmail( resultSet.getString( "email" ) );
 	    user.getAuth().setHashedPassword( resultSet.getString( "hashedPassword" ) );
-	    user.getAuth().setRefreshToken(resultSet.getString("accessToken"));
+	    user.getAuth().setRefreshToken(resultSet.getString("refreshToken"));
 	    user.getAuth().setRole(resultSet.getString("role"));
 	    return user;
 	}
