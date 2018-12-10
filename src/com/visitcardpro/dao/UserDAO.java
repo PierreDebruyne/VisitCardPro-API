@@ -52,6 +52,13 @@ public class UserDAO extends DAO<User> {
 		daoFactory.getAuthenticationDao().update(user.getAuth());
 	}
 
+	public void updateResetPasswordTokenByEmail(String email, String token) throws DAOException {
+		daoFactory.getAuthenticationDao().updateResetPasswordTokenByEmail(email, token);
+	}
+
+	public void updatePasswordByResetPasswordToken(String resetPasswordToken, String hashedPassword) {
+		daoFactory.getAuthenticationDao().updatePasswordByResetPasswordToken(resetPasswordToken, hashedPassword);
+	}
 	
 	protected User map( ResultSet resultSet ) throws SQLException {
 	    User user = new User();

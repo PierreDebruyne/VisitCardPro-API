@@ -7,16 +7,18 @@ import java.sql.SQLException;
 
 public class AuthenticationDAO extends DAO<Authentication> {
 
-    private static final String SQL_CREATE = "INSERT INTO Authentication VALUES(NULL, ?, ?, ?, ?)";
+    private static final String SQL_CREATE = "INSERT INTO Authentication VALUES(NULL, ?, ?, ?, ?, ?)";
     private static final String SQL_DELETE = "DELETE FROM Authentication WHERE id = ?";
-    private static final String SQL_UPDATE = "UPDATE Authentication SET email = ?, hashedPassword = ?, refreshToken = ?, role = ? WHERE id = ?";
+    private static final String SQL_UPDATE_BY_ID = "UPDATE Authentication SET email = ?, hashedPassword = ?, refreshToken = ?, role = ?, resetPasswordToken = ? WHERE id = ?";
+    private static final String SQL_UPDATE_RESETPASSWORDKEY_BY_EMAIL = "UPDATE Authentication SET resetPasswordKey = ? WHERE email = ?";
+    private static final String SQL_UPDATE_HASHEDPASSWORD_BY_RESETPASSWORDTOKEN = "UPDATE Authentication SET hashedPassword = ? WHERE resetPasswordToken = ?";
 
     public AuthenticationDAO(DAOFactory factory) {
         super(factory);
     }
 
     public void create(Authentication auth) {
-        auth.setId(this.createAndGetId(SQL_CREATE, auth.getEmail(), auth.getHashedPassword(), auth.getRefreshToken(), auth.getRole()));
+        auth.setId(this.createAndGetId(SQL_CREATE, auth.getEmail(), auth.getHashedPassword(), auth.getRefreshToken(), auth.getRole(), null));
     }
 
     public void delete(Authentication auth) {
@@ -24,7 +26,15 @@ public class AuthenticationDAO extends DAO<Authentication> {
     }
 
     public void update(Authentication auth) {
-        this.edit(SQL_UPDATE, auth.getEmail(), auth.getHashedPassword(), auth.getRefreshToken(), auth.getRole(), auth.getId());
+        this.edit(SQL_UPDATE_BY_ID, auth.getEmail(), auth.getHashedPassword(), auth.getRefreshToken(), auth.getRole(), auth.getId(), auth.getResetPasswordToken());
+    }
+
+    public void updateResetPasswordTokenByEmail(String email, String token) throws DAOException {
+        this.edit(SQL_UPDATE_RESETPASSWORDKEY_BY_EMAIL, token, email);
+    }
+
+    public void updatePasswordByResetPasswordToken(String resetPasswordToken, String hashedPassword) {
+        this.edit(SQL_UPDATE_HASHEDPASSWORD_BY_RESETPASSWORDTOKEN, hashedPassword, resetPasswordToken);
     }
 
 
@@ -35,6 +45,7 @@ public class AuthenticationDAO extends DAO<Authentication> {
         auth.setHashedPassword( resultSet.getString( "hashedPassword" ) );
         auth.setRefreshToken(resultSet.getString("accessToken"));
         auth.setRole(resultSet.getString("role"));
+        auth.setResetPasswordToken(resultSet.getString("resetPasswordToken"));
         return auth;
     }
 

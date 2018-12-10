@@ -5,6 +5,7 @@ import com.visitcardpro.authentication.TokenHelper;
 import com.visitcardpro.beans.Authentication;
 import com.visitcardpro.beans.User;
 import com.visitcardpro.dao.DAOFactory;
+import com.visitcardpro.dao.UserDAO;
 import com.visitcardpro.utils.JobHelper;
 import com.visitcardpro.utils.RandomString;
 import org.mindrot.jbcrypt.BCrypt;
@@ -116,7 +117,7 @@ public class UserService {
 
     @POST
     @Authenticated
-    @Path("/password-modify")
+    @Path("/editPassword")
     public Response modifyPassword(@HeaderParam("Authorization") final String credential) {
         String oldPassword = JobHelper.getCredentialParam(credential, 1);
         String newPassword = JobHelper.getCredentialParam(credential, 2);
@@ -138,19 +139,23 @@ public class UserService {
     }
 
     @POST
-    @Path("/password-reset")
-    public Response passwordReset() {
+    @Path("/resetPassword/{resetPasswordToken}")
+    public Response passwordReset(@HeaderParam("Authorization") final String credential,@PathParam("resetPasswordToken") final String resetPasswordToken) {
+        String newPassword = JobHelper.getCredentialParam(credential, 1);
+
+        String salt = BCrypt.gensalt(12);
+        String hashedPassword = BCrypt.hashpw(newPassword, salt);
+
+        DAOFactory.getInstance().getUserDao().updatePasswordByResetPasswordToken(resetPasswordToken, hashedPassword);
         return Response.ok().build();
     }
 
     @POST
-    @Path("/password-forget")
-    public Response passwordForget() {
-        String key = TokenHelper.generateResetPasswordToken();
-
-        // store key in auth
-        // return generated URI
-        return Response.ok().build();
+    @Path("/forgetPassword")
+    public Response passwordForget(@HeaderParam("email") final String email) {
+        String resetPasswordToken = TokenHelper.generateResetPasswordToken();
+        DAOFactory.getInstance().getUserDao().updateResetPasswordTokenByEmail(email, resetPasswordToken);
+        return Response.ok().entity("/resetPassword/" + resetPasswordToken).build();
     }
 
 }

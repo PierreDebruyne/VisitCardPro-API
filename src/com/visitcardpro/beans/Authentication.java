@@ -8,6 +8,7 @@ public class Authentication {
 	protected String hashedPassword;
 	protected String refreshToken;
 	protected String role;
+	protected String resetPasswordToken;
 	
 	public Authentication() { }
 	
@@ -43,5 +44,14 @@ public class Authentication {
 	}
 	public void setRole(String role) {
 		this.role = role;
+	}
+
+
+	public String getResetPasswordToken() {
+		return resetPasswordToken;
+	}
+
+	public void setResetPasswordToken(String resetPasswordToken) {
+		this.resetPasswordToken = resetPasswordToken;
 	}
 }
