@@ -1,7 +1,10 @@
 package com.visitcardpro.services;
 
+import com.visitcardpro.authentication.Authenticated;
 import com.visitcardpro.authentication.TokenHelper;
 import com.visitcardpro.beans.User;
+import com.visitcardpro.dao.DAOFactory;
+import com.visitcardpro.utils.JobHelper;
 import org.mindrot.jbcrypt.BCrypt;
 
 import javax.servlet.http.HttpServletRequest;
@@ -26,28 +29,13 @@ public class UserService {
     @POST
     @Path("/signin/credential")
     public Response signinWithCredential(@HeaderParam("Authorization") final String credential) {
-        if (credential == null) {
-            return Response.status(Response.Status.BAD_REQUEST).build();
-        }
         final String encodedUserPassword = credential.replaceFirst("Basic"+ " ", "");
-        String usernameAndPassword = null;
-        try {
-            byte[] decodedBytes = Base64.getDecoder().decode(encodedUserPassword);
-            usernameAndPassword = new String(decodedBytes, "UTF-8");
-        } catch (IOException e) {
-            e.printStackTrace();
+        String email = JobHelper.getCredentialParam(encodedUserPassword, 1);
+        String password = JobHelper.getCredentialParam(encodedUserPassword, 2);
+        if (email == null || password == null)
             return Response.status(Response.Status.BAD_REQUEST).build();
-        }
-        final StringTokenizer tokenizer = new StringTokenizer(usernameAndPassword, ":");
-        String email = "";
-        String password = "";
-        if (tokenizer.hasMoreTokens()) {
-            email = tokenizer.nextToken();
-        } if (tokenizer.hasMoreTokens()) {
-            password = tokenizer.nextToken();
-        }
 
-        User user = null; // get user by email from DAO
+        User user = DAOFactory.getInstance().getUserDao().findById(email); // get user by email from DAO
 
         if (user == null) {
             return Response.status(Response.Status.BAD_REQUEST).entity("invalid login").build();
@@ -55,14 +43,16 @@ public class UserService {
         if (BCrypt.checkpw(password, user.getAuth().getHashedPassword())) {
             return Response.status(Response.Status.BAD_REQUEST).entity("invalid password").build();
         }
-        if (servletRequest.getSession().getAttribute("accessToken") != null) {
-            // delete old refresh token - create new - store new token in DB
-        }
 
         String accessToken =  TokenHelper.generateAccessToken(email);
+
         servletRequest.getSession().setAttribute("accessToken", accessToken);
         servletRequest.getSession().setAttribute("userId", user.getId());
 
+        if (user.getAuth().getRefreshToken() == null) {
+            user.getAuth().setRefreshToken(TokenHelper.generateRefreshToken());
+//            DAOFactory.getInstance().getUserDao().update(user);
+        }
         return Response.ok().header("access_token", accessToken).header("refresh_token", user.getAuth().getRefreshToken()).build();
     }
 
@@ -70,7 +60,7 @@ public class UserService {
     @Path("/token")
     public Response getNewAccessToken(@HeaderParam("refresh_token") final String refreshToken) {
 
-        User user = null; // get user from refresh_token
+        User user = DAOFactory.getInstance().getUserDao().findByRefreshToken(refreshToken); // get user by email from DAO
         if (user == null)
             return Response.status(Response.Status.BAD_REQUEST).entity("invalid refresh token").build();
         String accessToken =  TokenHelper.generateAccessToken(user.getAuth().getEmail());
@@ -81,13 +71,20 @@ public class UserService {
 
     @POST
     @Path("/signout")
+    @Authenticated
     public Response signout() {
+        User user = DAOFactory.getInstance().getUserDao().findById((Long) servletRequest.getSession().getAttribute("userId"));
+        user.getAuth().setRefreshToken(null);
+//            DAOFactory.getInstance().getUserDao().update(user);
         return Response.ok().build();
     }
 
     @POST
     @Path("/signup")
-    public Response signup(final User user) {
+    public Response signup(final User user, @HeaderParam("Authorization") final String credential) {
+        // validate form
+
+        DAOFactory.getInstance().getUserDao().create(user);
         return Response.status(Response.Status.CREATED).build();
     }
 
