@@ -11,6 +11,7 @@ import java.util.Date;
 public class TokenHelper {
 
 	private static final long TOKEN_EXPIRATION_TIME = 864000000; // 10 day
+	private static final long PASSWORD_TOKEN_EXPIRATION_TIME = 1800; // 10 day
 	private static final String ISSUER = "VisitCardPro";
 	private static final String PRIVATE_KEY = "VisitCardPro";
 
@@ -24,7 +25,12 @@ public class TokenHelper {
 				.parseClaimsJws(value)
 				.getBody();
 	}
-	
+
+	public static String generateResetPasswordToken() {
+		return Jwts.builder().setExpiration(new Date(System.currentTimeMillis() + PASSWORD_TOKEN_EXPIRATION_TIME))
+				.signWith(SignatureAlgorithm.HS512, PRIVATE_KEY).compact();
+	}
+
 	public static String generateAccessToken(String subject) {
 		return Jwts.builder().setIssuedAt(new Date()).setIssuer(ISSUER)
 				.setSubject(subject)

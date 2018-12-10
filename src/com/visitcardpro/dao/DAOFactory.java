@@ -106,4 +106,7 @@ public class DAOFactory {
     public AuthenticationDAO getAuthenticationDao() {
         return new AuthenticationDAO( this );
     }
+    public CardDAO getCardDao() {
+        return new CardDAO(this);
+    }
 }

@@ -1,6 +1,10 @@
 package com.visitcardpro.beans;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class Card {
+    @JsonIgnore
     protected long id;
     protected String key;
     protected String email;
@@ -16,10 +20,12 @@ public class Card {
         this.id = id;
     }
 
+    @JsonProperty
     public String getKey() {
         return key;
     }
 
+    @JsonIgnore
     public void setKey(String key) {
         this.key = key;
     }

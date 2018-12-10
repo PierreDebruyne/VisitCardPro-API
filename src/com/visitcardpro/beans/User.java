@@ -2,7 +2,6 @@ package com.visitcardpro.beans;
 
 public class User {
 	protected long id;
-	
 	protected Authentication auth;
 
 	public User() { }
@@ -22,6 +21,4 @@ public class User {
 	public void setAuth(Authentication auth) {
 		this.auth = auth;
 	}
-	
-	
 }
