@@ -5,9 +5,7 @@ import com.visitcardpro.authentication.TokenHelper;
 import com.visitcardpro.beans.Authentication;
 import com.visitcardpro.beans.User;
 import com.visitcardpro.dao.DAOFactory;
-import com.visitcardpro.dao.UserDAO;
 import com.visitcardpro.utils.JobHelper;
-import com.visitcardpro.utils.RandomString;
 import org.mindrot.jbcrypt.BCrypt;
 
 import javax.servlet.http.HttpServletRequest;
@@ -16,13 +14,11 @@ import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.io.IOException;
-import java.util.Base64;
-import java.util.StringTokenizer;
 
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
-public class UserService {
+@Path("/auth")
+public class AuthenticationService {
 
     @Context
     private ContainerRequestContext requestContext;
@@ -30,7 +26,7 @@ public class UserService {
     private HttpServletRequest servletRequest;
 
     @POST
-    @Path("/signin/credential")
+    @Path("/signin")
     public Response signinWithCredential(@HeaderParam("Authorization") final String credential) {
         final String encodedUserPassword = credential.replaceFirst("Basic"+ " ", "");
         String email = JobHelper.getCredentialParam(encodedUserPassword, 1);
@@ -117,7 +113,7 @@ public class UserService {
         return Response.ok().build();
     }
 
-    @POST
+    @PUT
     @Authenticated
     @Path("/editPassword")
     public Response modifyPassword(@HeaderParam("Authorization") final String credential) {
@@ -140,7 +136,7 @@ public class UserService {
 
     @POST
     @Path("/resetPassword/{resetPasswordToken}")
-    public Response passwordReset(@HeaderParam("Authorization") final String credential,@PathParam("resetPasswordToken") final String resetPasswordToken) {
+    public Response passwordReset(@HeaderParam("Authorization") final String credential, @PathParam("resetPasswordToken") final String resetPasswordToken) {
         String newPassword = JobHelper.getCredentialParam(credential, 1);
 
         String salt = BCrypt.gensalt(12);
