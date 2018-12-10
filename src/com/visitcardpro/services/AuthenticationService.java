@@ -84,8 +84,9 @@ public class AuthenticationService {
     @Path("/signup")
     public Response signup(final User form, @HeaderParam("Authorization") final String credential) {
         // validate form
-        String email = JobHelper.getCredentialParam(credential, 1);
-        String password = JobHelper.getCredentialParam(credential, 2);
+        final String encodedUserPassword = credential.replaceFirst("Basic"+ " ", "");
+        String email = JobHelper.getCredentialParam(encodedUserPassword, 1);
+        String password = JobHelper.getCredentialParam(encodedUserPassword, 2);
 
         String salt = BCrypt.gensalt(12);
         String hashed = BCrypt.hashpw(password, salt);
@@ -116,10 +117,7 @@ public class AuthenticationService {
     @PUT
     @Authenticated
     @Path("/editPassword")
-    public Response modifyPassword(@HeaderParam("Authorization") final String credential) {
-        String oldPassword = JobHelper.getCredentialParam(credential, 1);
-        String newPassword = JobHelper.getCredentialParam(credential, 2);
-
+    public Response modifyPassword(@HeaderParam("oldPassword") final String oldPassword, @HeaderParam("newPassword") final String newPassword) {
         User user = (User) servletRequest.getSession().getAttribute("user");
 
         if (BCrypt.checkpw(oldPassword, user.getAuth().getHashedPassword())) {
@@ -136,9 +134,7 @@ public class AuthenticationService {
 
     @POST
     @Path("/resetPassword/{resetPasswordToken}")
-    public Response passwordReset(@HeaderParam("Authorization") final String credential, @PathParam("resetPasswordToken") final String resetPasswordToken) {
-        String newPassword = JobHelper.getCredentialParam(credential, 1);
-
+    public Response passwordReset(@HeaderParam("newPassword") final String newPassword, @PathParam("resetPasswordToken") final String resetPasswordToken) {
         String salt = BCrypt.gensalt(12);
         String hashedPassword = BCrypt.hashpw(newPassword, salt);
 
