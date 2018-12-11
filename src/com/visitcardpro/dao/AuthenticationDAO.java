@@ -26,7 +26,6 @@ public class AuthenticationDAO extends DAO<Authentication> {
     }
 
     public void update(Authentication auth) {
-        System.out.println(auth.getId() + "======" + auth.getRefreshToken());
         this.edit(SQL_UPDATE_BY_ID, auth.getEmail(), auth.getHashedPassword(), auth.getRefreshToken(), auth.getRole(), auth.getResetPasswordToken(), auth.getId());
     }
 
