@@ -18,6 +18,8 @@ public class DAOFactory {
     private static final String PROPERTY_NOM_UTILISATEUR = "nomutilisateur";
     private static final String PROPERTY_MOT_DE_PASSE    = "motdepasse";
 
+    static DAOFactory instance = setUp();
+
     /* package */BoneCP                      connectionPool           = null;
 
     /* package */DAOFactory( BoneCP connectionPool ) {
@@ -28,7 +30,8 @@ public class DAOFactory {
      * Méthode chargée de récupérer les informations de connexion à la base de
      * données, charger le driver JDBC et retourner une instance de la Factory
      */
-    public static DAOFactory getInstance() throws DAOConfigurationException {
+
+    public static DAOFactory setUp() throws DAOConfigurationException {
         Properties properties = new Properties();
         String url;
         String driver;
@@ -88,7 +91,10 @@ public class DAOFactory {
          * Enregistrement du pool créé dans une variable d'instance via un appel
          * au constructeur de DAOFactory
          */
-        DAOFactory instance = new DAOFactory( connectionPool );
+        return new DAOFactory( connectionPool );
+    }
+
+    public static DAOFactory getInstance() throws DAOConfigurationException {
         return instance;
     }
 

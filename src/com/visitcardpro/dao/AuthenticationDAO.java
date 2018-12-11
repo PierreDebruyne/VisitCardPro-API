@@ -11,7 +11,7 @@ public class AuthenticationDAO extends DAO<Authentication> {
     private static final String SQL_DELETE = "DELETE FROM Authentication WHERE id = ?";
     private static final String SQL_UPDATE_BY_ID = "UPDATE Authentication SET email = ?, hashedPassword = ?, refreshToken = ?, role = ?, resetPasswordToken = ? WHERE id = ?";
     private static final String SQL_UPDATE_RESETPASSWORDTOKEN_BY_EMAIL = "UPDATE Authentication SET resetPasswordToken = ? WHERE email = ?";
-    private static final String SQL_UPDATE_HASHEDPASSWORD_BY_RESETPASSWORDTOKEN = "UPDATE Authentication SET hashedPassword = ? WHERE resetPasswordToken = ?";
+    private static final String SQL_UPDATE_HASHEDPASSWORD_BY_RESETPASSWORDTOKEN = "UPDATE Authentication SET hashedPassword = ?, resetPasswordToken = NULL WHERE resetPasswordToken = ?";
 
     public AuthenticationDAO(DAOFactory factory) {
         super(factory);
