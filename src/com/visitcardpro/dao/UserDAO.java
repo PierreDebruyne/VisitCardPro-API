@@ -8,10 +8,10 @@ import com.visitcardpro.beans.Authentication;
 import com.visitcardpro.beans.User;
 
 public class UserDAO extends DAO<User> {
-	private static final String SQL_SELECT_BY_ID = "SELECT User.id, Authentication.email, Authentication.hashedPassword, Authentication.refreshToken, Authentication.role FROM User INNER JOIN Authentication ON User.authId = Authentication.id WHERE id = ?";
-	private static final String SQL_SELECT_BY_EMAIL = "SELECT User.id, Authentication.email, Authentication.hashedPassword, Authentication.refreshToken, Authentication.role FROM User INNER JOIN Authentication ON User.authId = Authentication.id WHERE Authentication.email = ?";
-	private static final String SQL_SELECT_BY_REFRESH_TOKEN = "SELECT User.id, Authentication.email, Authentication.hashedPassword, Authentication.refreshToken, Authentication.role FROM User INNER JOIN Authentication ON User.authId = Authentication.id WHERE Authentication.refreshToken = ?";
-	private static final String SQL_SELECT_BY_ROLE = "SELECT User.id, Authentication.email, Authentication.hashedPassword, Authentication.refreshToken, Authentication.role FROM User INNER JOIN Authentication ON User.authId = Authentication.id WHERE Authentication.role = ?";
+	private static final String SQL_SELECT_BY_ID = "SELECT User.id, Authentication.id as authId, Authentication.email, Authentication.hashedPassword, Authentication.refreshToken, Authentication.role FROM User INNER JOIN Authentication ON User.authId = Authentication.id WHERE id = ?";
+	private static final String SQL_SELECT_BY_EMAIL = "SELECT User.id, Authentication.id as authId, Authentication.email, Authentication.hashedPassword, Authentication.refreshToken, Authentication.role FROM User INNER JOIN Authentication ON User.authId = Authentication.id WHERE Authentication.email = ?";
+	private static final String SQL_SELECT_BY_REFRESH_TOKEN = "SELECT User.id, Authentication.id as authId, Authentication.email, Authentication.hashedPassword, Authentication.refreshToken, Authentication.role FROM User INNER JOIN Authentication ON User.authId = Authentication.id WHERE Authentication.refreshToken = ?";
+	private static final String SQL_SELECT_BY_ROLE = "SELECT User.id, Authentication.id as authId, Authentication.email, Authentication.hashedPassword, Authentication.refreshToken, Authentication.role FROM User INNER JOIN Authentication ON User.authId = Authentication.id WHERE Authentication.role = ?";
 	private static final String SQL_CREATE       = 	"INSERT INTO User VALUES(NULL, ?)";
 	private static final String SQL_DELETE       = "DELETE FROM User WHERE id = ?";
 
@@ -64,6 +64,7 @@ public class UserDAO extends DAO<User> {
 	    User user = new User();
 	    user.setId( resultSet.getLong( "id" ) );
 	    user.setAuth(new Authentication());
+	    user.getAuth().setId(resultSet.getLong("authId"));
 	    user.getAuth().setEmail( resultSet.getString( "email" ) );
 	    user.getAuth().setHashedPassword( resultSet.getString( "hashedPassword" ) );
 	    user.getAuth().setRefreshToken(resultSet.getString("refreshToken"));

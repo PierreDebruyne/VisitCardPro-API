@@ -44,16 +44,16 @@ public abstract class DAO<T> {
     protected void edit(String sql, Object... objects) throws DAOException {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
-        ResultSet resultSet = null;
+        int resultSet;
 
         try {
             connection = daoFactory.getConnection();
             preparedStatement = initialisationRequetePreparee( connection, sql, false, objects );
-            resultSet = preparedStatement.executeQuery();
+            resultSet = preparedStatement.executeUpdate();
         } catch ( SQLException e ) {
             throw new DAOException( e );
         } finally {
-            fermeturesSilencieuses( resultSet, preparedStatement, connection );
+            fermeturesSilencieuses(preparedStatement, connection );
         }
     }
 

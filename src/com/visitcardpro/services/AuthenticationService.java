@@ -39,7 +39,7 @@ public class AuthenticationService {
         if (user == null) {
             return Response.status(Response.Status.BAD_REQUEST).entity("invalid login").build();
         }
-        if (BCrypt.checkpw(password, user.getAuth().getHashedPassword())) {
+        if (!BCrypt.checkpw(password, user.getAuth().getHashedPassword())) {
             return Response.status(Response.Status.BAD_REQUEST).entity("invalid password").build();
         }
 
@@ -49,6 +49,7 @@ public class AuthenticationService {
         servletRequest.getSession().setAttribute("user", user);
 
         if (user.getAuth().getRefreshToken() == null) {
+            System.out.println("Empty=====");
             user.getAuth().setRefreshToken(TokenHelper.generateRefreshToken());
             DAOFactory.getInstance().getUserDao().update(user);
         }
@@ -120,7 +121,7 @@ public class AuthenticationService {
     public Response modifyPassword(@HeaderParam("oldPassword") final String oldPassword, @HeaderParam("newPassword") final String newPassword) {
         User user = (User) servletRequest.getSession().getAttribute("user");
 
-        if (BCrypt.checkpw(oldPassword, user.getAuth().getHashedPassword())) {
+        if (!BCrypt.checkpw(oldPassword, user.getAuth().getHashedPassword())) {
             return Response.status(Response.Status.BAD_REQUEST).entity("invalid password").build();
         }
         String salt = BCrypt.gensalt(12);

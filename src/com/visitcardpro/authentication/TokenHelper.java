@@ -21,7 +21,7 @@ public class TokenHelper {
 	public TokenHelper(String token) {
 		value = token;
 		body = Jwts.parser()
-//				.setSigningKey(PRIVATE_KEY)
+				.setSigningKey(PRIVATE_KEY)
 				.parseClaimsJws(value)
 				.getBody();
 	}

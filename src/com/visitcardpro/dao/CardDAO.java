@@ -9,11 +9,11 @@ import java.util.List;
 
 public class CardDAO extends DAO<Card> {
 
-    public final static String SQL_FIND_BY_KEY_AND_USERID = "SELECT * FROM Card WHERE card.key = ? AND card.userId = ?";
+    public final static String SQL_FIND_BY_KEY_AND_USERID = "SELECT * FROM Card WHERE cardKey = ? AND userId = ?";
     public final static String SQL_CREATE = "INSERT INTO Card VALUES(NULL, ?, ?, ?, ?, ?, ?)";
-    public final static String SQL_DELETE = "DELETE FROM Card WHERE card.key = ? AND card.userId = ?";
-    public final static String SQL_LIST_BY_USERID = "SELECT * FROM Card WHERE card.userId = ?";
-    private static final String SQL_UPDATE = "UPDATE Card SET email = ?, phone = ?, firstName = ?, lastName = ? WHERE key = ? AND userId = ?";
+    public final static String SQL_DELETE = "DELETE FROM Card WHERE cardKey = ? AND userId = ?";
+    public final static String SQL_LIST_BY_USERID = "SELECT * FROM Card WHERE userId = ?";
+    private static final String SQL_UPDATE = "UPDATE Card SET email = ?, phone = ?, firstName = ?, lastName = ? WHERE cardKey = ? AND userId = ?";
 
     public CardDAO(DAOFactory factory) {
         super(factory);
@@ -46,7 +46,7 @@ public class CardDAO extends DAO<Card> {
     Card map(ResultSet resultSet) throws SQLException {
         Card card = new Card();
         card.setId(resultSet.getLong("id"));
-        card.setKey(resultSet.getString("key"));
+        card.setKey(resultSet.getString("cardKey"));
         card.setEmail(resultSet.getString("email"));
         card.setPhone(resultSet.getString("phone"));
         card.setFirstName(resultSet.getString("firstName"));
