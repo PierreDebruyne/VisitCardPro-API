@@ -32,8 +32,6 @@ public class CardService {
         return Response.ok().entity(cards).build();
     }
 
-
-
     @POST
     @Authenticated
     public Response createCard(final CardForm form) {

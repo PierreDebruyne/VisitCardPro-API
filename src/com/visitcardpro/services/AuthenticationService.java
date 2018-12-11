@@ -103,17 +103,24 @@ public class AuthenticationService {
         User user = new User();
         user.setAuth(auth);
 
+        // send validation email
+        
         DAOFactory.getInstance().getUserDao().create(user);
         return Response.status(Response.Status.CREATED).build();
     }
 
     @DELETE
+    @Authenticated
     public Response deleteAccount() {
+        User user = (User) servletRequest.getSession().getAttribute("user");
+        DAOFactory.getInstance().getUserDao().delete(user);
+        servletRequest.getSession().invalidate();
         return Response.ok().build();
     }
 
     @POST
-    public Response verifyAccount() {
+    @Path("/verify/{code}")
+    public Response verifyAccount(@PathParam("code") final String code) {
         return Response.ok().build();
     }
 
