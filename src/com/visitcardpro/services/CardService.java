@@ -4,6 +4,7 @@ import com.visitcardpro.authentication.Authenticated;
 import com.visitcardpro.beans.Card;
 import com.visitcardpro.beans.User;
 import com.visitcardpro.dao.DAOFactory;
+import com.visitcardpro.forms.CardForm;
 import com.visitcardpro.utils.RandomString;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
@@ -35,20 +36,27 @@ public class CardService {
 
     @POST
     @Authenticated
-    public Response createCard(final Card form) {
-        form.setKey(new RandomString(8).nextString());
+    public Response createCard(final CardForm form) {
         User user = (User) servletRequest.getSession().getAttribute("user");
-        DAOFactory.getInstance().getCardDao().createCardByUser(form, user);
-        return Response.status(Response.Status.CREATED).entity(form).build();
+        if (!form.isValidForm())
+            return Response.status(Response.Status.BAD_REQUEST).entity(form.getErrors()).build();
+
+        Card card = form.generateCard();
+        card.setKey(new RandomString(8).nextString());
+        DAOFactory.getInstance().getCardDao().createCardByUser(card, user);
+        return Response.status(Response.Status.CREATED).entity(card).build();
     }
 
     @PUT
     @Path("/{key}")
     @Authenticated
-    public Response updateCard(@PathParam("key") final String key, final Card form) {
+    public Response updateCard(@PathParam("key") final String key, final CardForm form) {
         User user = (User) servletRequest.getSession().getAttribute("user");
-        form.setKey(key);
-        DAOFactory.getInstance().getCardDao().updateCardByUser(form, user);
+        if (!form.isValidForm())
+            return Response.status(Response.Status.BAD_REQUEST).entity(form.getErrors()).build();
+        Card card = form.generateCard();
+        card.setKey(new RandomString(8).nextString());
+        DAOFactory.getInstance().getCardDao().updateCardByUser(card, user);
         return Response.ok().build();
     }
 

@@ -5,6 +5,7 @@ import com.visitcardpro.authentication.TokenHelper;
 import com.visitcardpro.beans.Authentication;
 import com.visitcardpro.beans.User;
 import com.visitcardpro.dao.DAOFactory;
+import com.visitcardpro.forms.Normalizer;
 import com.visitcardpro.utils.JobHelper;
 import org.mindrot.jbcrypt.BCrypt;
 
@@ -49,7 +50,6 @@ public class AuthenticationService {
         servletRequest.getSession().setAttribute("user", user);
 
         if (user.getAuth().getRefreshToken() == null) {
-            System.out.println("Empty=====");
             user.getAuth().setRefreshToken(TokenHelper.generateRefreshToken());
             DAOFactory.getInstance().getUserDao().update(user);
         }
@@ -89,6 +89,8 @@ public class AuthenticationService {
         String email = JobHelper.getCredentialParam(encodedUserPassword, 1);
         String password = JobHelper.getCredentialParam(encodedUserPassword, 2);
 
+        if (!Normalizer.checkEmail(email) || !Normalizer.checkPassword(password))
+            return Response.status(Response.Status.BAD_REQUEST).entity("Invalid email or password.").build();
         String salt = BCrypt.gensalt(12);
         String hashed = BCrypt.hashpw(password, salt);
 
@@ -122,8 +124,10 @@ public class AuthenticationService {
         User user = (User) servletRequest.getSession().getAttribute("user");
 
         if (!BCrypt.checkpw(oldPassword, user.getAuth().getHashedPassword())) {
-            return Response.status(Response.Status.BAD_REQUEST).entity("invalid password").build();
+            return Response.status(Response.Status.BAD_REQUEST).entity("Invalid password").build();
         }
+        if (!Normalizer.checkPassword(newPassword))
+            return Response.status(Response.Status.BAD_REQUEST).entity("Invalid new password.").build();
         String salt = BCrypt.gensalt(12);
         String newHashedPassowrd = BCrypt.hashpw(newPassword, salt);
 
@@ -136,6 +140,8 @@ public class AuthenticationService {
     @POST
     @Path("/resetPassword/{resetPasswordToken}")
     public Response passwordReset(@HeaderParam("newPassword") final String newPassword, @PathParam("resetPasswordToken") final String resetPasswordToken) {
+        if (!Normalizer.checkPassword(newPassword))
+            return Response.status(Response.Status.BAD_REQUEST).entity("Invalid new password.").build();
         String salt = BCrypt.gensalt(12);
         String hashedPassword = BCrypt.hashpw(newPassword, salt);
 
