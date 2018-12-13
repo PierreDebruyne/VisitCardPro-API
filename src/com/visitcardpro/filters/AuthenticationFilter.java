@@ -27,18 +27,20 @@ public class AuthenticationFilter implements ContainerRequestFilter {
         Method method = resourceInfo.getResourceMethod();
         if (method.isAnnotationPresent(Authenticated.class)) {
             String token = requestContext.getHeaderString("access_token");
-            TokenHelper helper = new TokenHelper(token);
 
             if (token == null || token.isEmpty()) {
                 requestContext.abortWith(Response.status(Response.Status.UNAUTHORIZED).entity("Authentication required : access_token not found or empty").build());
-            } else if (new Date().after(helper.getExpiration())) {
-                requestContext.abortWith(Response.status(Response.Status.UNAUTHORIZED).entity("Authentication required : access_token expired").build());
-            } else if (servletRequest.getSession().getAttribute("user") == null) {
-                requestContext.abortWith(Response.status(Response.Status.UNAUTHORIZED).entity("Authentication required : not authenticated").build());
-            } else if (!servletRequest.getSession().getAttribute("accessToken").equals(token)) {
-                requestContext.abortWith(Response.status(Response.Status.UNAUTHORIZED).entity("Authentication required : access_token doesn't match").build());
-            }
+            } else {
+                TokenHelper helper = new TokenHelper(token);
 
+                if (new Date().after(helper.getExpiration())) {
+                    requestContext.abortWith(Response.status(Response.Status.UNAUTHORIZED).entity("Authentication required : access_token expired").build());
+                } else if (servletRequest.getSession().getAttribute("user") == null) {
+                    requestContext.abortWith(Response.status(Response.Status.UNAUTHORIZED).entity("Authentication required : not authenticated").build());
+                } else if (!servletRequest.getSession().getAttribute("accessToken").equals(token)) {
+                    requestContext.abortWith(Response.status(Response.Status.UNAUTHORIZED).entity("Authentication required : access_token doesn't match").build());
+                }
+            }
         }
     }
 }
