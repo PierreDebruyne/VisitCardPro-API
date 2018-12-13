@@ -15,6 +15,7 @@ import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.List;
 
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
@@ -25,6 +26,13 @@ public class AuthenticationService {
     private ContainerRequestContext requestContext;
     @Context
     private HttpServletRequest servletRequest;
+
+    @GET
+    @Path("/test")
+    public Response test() {
+//        List<User> users = DAOFactory.getInstance().getUserDao().getListByRole("BASIC");
+        return Response.ok().build();
+    }
 
     @POST
     @Path("/signin")
@@ -104,7 +112,7 @@ public class AuthenticationService {
         user.setAuth(auth);
 
         // send validation email
-        
+
         DAOFactory.getInstance().getUserDao().create(user);
         return Response.status(Response.Status.CREATED).build();
     }
