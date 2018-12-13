@@ -1,4 +1,4 @@
-create table Authentication
+create table services.Authentication
 (
   id                 int auto_increment
     primary key,
@@ -19,7 +19,7 @@ create table User
     primary key,
   authId int not null,
   constraint USER_AUTH___fk
-    foreign key (authId) references Authentication (id)
+    foreign key (authId) references services.Authentication (id)
 );
 
 create table Card
