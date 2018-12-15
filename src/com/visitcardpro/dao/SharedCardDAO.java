@@ -42,7 +42,7 @@ public class SharedCardDAO extends DAO<SharedCard> {
     }
 
     @Override
-    SharedCard map(ResultSet resultSet) throws SQLException {
+    protected SharedCard map(ResultSet resultSet) throws SQLException {
         SharedCard sharedCard = new SharedCard();
         Card card = new Card();
         card.setId(resultSet.getLong("cardId"));

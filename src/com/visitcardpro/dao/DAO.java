@@ -81,27 +81,27 @@ public abstract class DAO<T> {
 
     protected T find( String sql, Object... objets ) throws DAOException {
         Connection connexion = null;
-        PreparedStatement preparedStatement = null;
-        ResultSet resultSet = null;
-        T bean = null;
+            PreparedStatement preparedStatement = null;
+            ResultSet resultSet = null;
+            T bean = null;
 
-        try {
-            /* Récupération d'une connexion depuis la Factory */
-            connexion = daoFactory.getConnection();
-            /*
-             * Préparation de la requête avec les objets passés en arguments
-             * (ici, uniquement un id) et exécution.
-             */
-            preparedStatement = initialisationRequetePreparee( connexion, sql, false, objets );
-            resultSet = preparedStatement.executeQuery();
-            /* Parcours de la ligne de données retournée dans le ResultSet */
-            if ( resultSet.next() ) {
-                bean = map( resultSet );
-            }
-        } catch ( SQLException e ) {
-            throw new DAOException( e );
-        } finally {
-            fermeturesSilencieuses( resultSet, preparedStatement, connexion );
+            try {
+                /* Récupération d'une connexion depuis la Factory */
+                connexion = daoFactory.getConnection();
+                /*
+                 * Préparation de la requête avec les objets passés en arguments
+                 * (ici, uniquement un id) et exécution.
+                 */
+                preparedStatement = initialisationRequetePreparee( connexion, sql, false, objets );
+                resultSet = preparedStatement.executeQuery();
+                /* Parcours de la ligne de données retournée dans le ResultSet */
+                if ( resultSet.next() ) {
+                    bean = map( resultSet );
+                }
+            } catch ( SQLException e ) {
+                throw new DAOException( e );
+            } finally {
+                fermeturesSilencieuses( resultSet, preparedStatement, connexion );
         }
 
         return bean;

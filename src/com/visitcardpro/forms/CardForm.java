@@ -25,7 +25,7 @@ public class CardForm {
         return card;
     }
 
-    public boolean isValidForm() {
+    public boolean isValidForm() throws FormException {
         if (!Normalizer.checkEmail(getEmail()))
             errors.add("Invalid email.");
         if (!Normalizer.checkProperNoun(getFirstName()))
@@ -35,7 +35,7 @@ public class CardForm {
         if (!Normalizer.ckeckPhoneNumber(getPhone()))
             errors.add("Invalid phone number.");
         if (!errors.isEmpty())
-            return false;
+            throw new FormException("Invalid form");
         firstName = Normalizer.normalizeProperNoun(getFirstName());
         lastName = Normalizer.normalizeProperNoun(getLastName());
         email = Normalizer.normalizeEmail(getEmail());

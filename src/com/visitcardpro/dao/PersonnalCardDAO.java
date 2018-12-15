@@ -40,7 +40,7 @@ public class PersonnalCardDAO extends DAO<PersonnalCard> {
     }
 
     @Override
-    PersonnalCard map(ResultSet resultSet) throws SQLException {
+    protected PersonnalCard map(ResultSet resultSet) throws SQLException {
         PersonnalCard personnalCard = new PersonnalCard();
         Card card = new Card();
         card.setId(resultSet.getLong("cardId"));

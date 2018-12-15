@@ -43,7 +43,7 @@ public class CardDAO extends DAO<Card> {
 
 
     @Override
-    Card map(ResultSet resultSet) throws SQLException {
+    protected Card map(ResultSet resultSet) throws SQLException {
         Card card = new Card();
         card.setId(resultSet.getLong("id"));
         card.setKey(resultSet.getString("cardKey"));
