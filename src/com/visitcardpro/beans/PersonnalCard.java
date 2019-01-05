@@ -1,8 +1,10 @@
 package com.visitcardpro.beans;
 
 public class PersonnalCard {
-    protected String sharingKey;
     protected long id;
+    protected String key;
+    protected String sharingKey;
+
     protected Card card;
 
     public Card getCard() {
@@ -21,6 +23,13 @@ public class PersonnalCard {
         this.id = id;
     }
 
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
+    }
     public String getSharingKey() {
         return sharingKey;
     }

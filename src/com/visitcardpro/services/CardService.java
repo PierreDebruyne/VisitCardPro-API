@@ -2,6 +2,7 @@ package com.visitcardpro.services;
 
 import com.visitcardpro.authentication.Authenticated;
 import com.visitcardpro.beans.Card;
+import com.visitcardpro.beans.PersonnalCard;
 import com.visitcardpro.beans.User;
 import com.visitcardpro.dao.DAOFactory;
 import com.visitcardpro.forms.CardForm;
@@ -28,7 +29,7 @@ public class CardService {
     @Authenticated
     public Response exploreCards() {
         User user = (User) servletRequest.getSession().getAttribute("user");
-        List<Card> cards = DAOFactory.getInstance().getCardDao().getCardsByUser(user);
+        List<PersonnalCard> cards = DAOFactory.getInstance().getPersonnalCardDao().getByUser(user);
         return Response.ok().entity(cards).build();
     }
 
@@ -40,8 +41,13 @@ public class CardService {
             return Response.status(Response.Status.BAD_REQUEST).entity(form.getErrors()).build();
 
         Card card = form.generateCard();
-        card.setKey(new RandomString(8).nextString());
-        DAOFactory.getInstance().getCardDao().createCardByUser(card, user);
+
+        PersonnalCard pCard = new PersonnalCard();
+        pCard.setKey(new RandomString(8).nextString());
+        pCard.setSharingKey(new RandomString(8).nextString());
+        pCard.setCard(card);
+
+        DAOFactory.getInstance().getPersonnalCardDao().createByUser(pCard, user);
         return Response.status(Response.Status.CREATED).entity(card).build();
     }
 
@@ -53,8 +59,7 @@ public class CardService {
         if (!form.isValidForm())
             return Response.status(Response.Status.BAD_REQUEST).entity(form.getErrors()).build();
         Card card = form.generateCard();
-        card.setKey(new RandomString(8).nextString());
-        DAOFactory.getInstance().getCardDao().updateCardByUser(card, user);
+        DAOFactory.getInstance().getPersonnalCardDao().updateCardByUserAndKey(card, user, key);
         return Response.ok().build();
     }
 
@@ -63,7 +68,7 @@ public class CardService {
     @Authenticated
     public Response deleteCard(@PathParam("key") final String key) {
         User user = (User) servletRequest.getSession().getAttribute("user");
-        DAOFactory.getInstance().getCardDao().deleteCardByKeyAndUser(key, user);
+        DAOFactory.getInstance().getPersonnalCardDao().deleteByKeyAndUser(key, user);
         return Response.ok().build();
     }
 
@@ -72,7 +77,7 @@ public class CardService {
     @Authenticated
     public Response getCard(@PathParam("key") final String key) {
         User user = (User) servletRequest.getSession().getAttribute("user");
-        Card card = DAOFactory.getInstance().getCardDao().getCardByKeyAndUser(key, user);
+        PersonnalCard card = DAOFactory.getInstance().getPersonnalCardDao().getByKeyAndUser(key, user);
         return Response.ok().entity(card).build();
     }
 }

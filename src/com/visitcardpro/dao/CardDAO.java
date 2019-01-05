@@ -9,44 +9,30 @@ import java.util.List;
 
 public class CardDAO extends DAO<Card> {
 
-    public final static String SQL_FIND_BY_KEY_AND_USERID = "SELECT * FROM Card WHERE cardKey = ? AND userId = ?";
-    public final static String SQL_CREATE = "INSERT INTO Card VALUES(NULL, ?, ?, ?, ?, ?, ?)";
-    public final static String SQL_DELETE = "DELETE FROM Card WHERE cardKey = ? AND userId = ?";
-    public final static String SQL_LIST_BY_USERID = "SELECT * FROM Card WHERE userId = ?";
-    private static final String SQL_UPDATE = "UPDATE Card SET email = ?, phone = ?, firstName = ?, lastName = ? WHERE cardKey = ? AND userId = ?";
+    public final static String SQL_CREATE = "INSERT INTO Card VALUES(NULL, ?, ?, ?, ?)";
+    public final static String SQL_DELETE = "DELETE FROM Card WHERE id = ?";
+    private static final String SQL_UPDATE = "UPDATE Card SET email = ?, phone = ?, firstName = ?, lastName = ? WHERE id = ?";
 
     public CardDAO(DAOFactory factory) {
         super(factory);
     }
 
-
-    public Card getCardByKeyAndUser(String key, User user) throws DAOException{
-        return this.find(SQL_FIND_BY_KEY_AND_USERID, key, user.getId());
+    public void create(Card card) throws DAOException{
+        card.setId(this.createAndGetId(SQL_CREATE, card.getEmail(), card.getPhone(), card.getFirstName(), card.getLastName()));
     }
 
-    public void createCardByUser(Card card, User user) throws DAOException{
-        card.setId(this.createAndGetId(SQL_CREATE, card.getKey(), user.getId(), card.getEmail(), card.getPhone(), card.getFirstName(), card.getLastName()));
+    public void delete(Card card) throws DAOException {
+        this.delete(SQL_DELETE, card.getId());
     }
 
-    public void deleteCardByKeyAndUser(String key, User user) throws DAOException {
-        this.delete(SQL_DELETE, key, user.getId());
+    public void update(Card card) throws DAOException {
+        this.edit(SQL_UPDATE, card.getEmail(), card.getPhone(), card.getFirstName(), card.getLastName(), card.getId());
     }
-
-    public List<Card> getCardsByUser(User user) throws DAOException {
-        return this.getList(SQL_LIST_BY_USERID, user.getId());
-    }
-
-    public void updateCardByUser(Card card, User user) throws DAOException {
-        this.edit(SQL_UPDATE, card.getEmail(), card.getPhone(), card.getFirstName(), card.getLastName(), card.getKey(), user.getId());
-    }
-
-
 
     @Override
     protected Card map(ResultSet resultSet) throws SQLException {
         Card card = new Card();
         card.setId(resultSet.getLong("id"));
-        card.setKey(resultSet.getString("cardKey"));
         card.setEmail(resultSet.getString("email"));
         card.setPhone(resultSet.getString("phone"));
         card.setFirstName(resultSet.getString("firstName"));

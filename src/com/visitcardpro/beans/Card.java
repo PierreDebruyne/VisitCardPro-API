@@ -6,7 +6,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class Card {
     @JsonIgnore
     protected long id;
-    protected String key;
     protected String email;
     protected String phone;
     protected String firstName;
@@ -18,16 +17,6 @@ public class Card {
 
     public void setId(long id) {
         this.id = id;
-    }
-
-    @JsonProperty
-    public String getKey() {
-        return key;
-    }
-
-    @JsonIgnore
-    public void setKey(String key) {
-        this.key = key;
     }
 
     public String getEmail() {
