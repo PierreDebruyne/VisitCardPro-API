@@ -116,4 +116,10 @@ public class DAOFactory {
     public CardDAO getCardDao() {
         return new CardDAO(this);
     }
+    public PersonnalCardDAO getPersonnalCardDao() {
+        return new PersonnalCardDAO(this);
+    }
+    public SharedCardDAO getSharedCardDao() {
+        return new SharedCardDAO(this);
+    }
 }
