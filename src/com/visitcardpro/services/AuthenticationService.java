@@ -30,8 +30,8 @@ public class AuthenticationService {
     @GET
     @Path("/test")
     public Response test() {
-//        List<User> users = DAOFactory.getInstance().getUserDao().getListByRole("BASIC");
-        return Response.ok().build();
+        List<User> users = DAOFactory.getInstance().getUserDao().getListByRole("BASIC");
+        return Response.ok(users).build();
     }
 
     @POST
